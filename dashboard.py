@@ -24,7 +24,7 @@ def main():
 		raw_data = raw_data[raw_data['CODE_GENDER'] != 'XNA']
 		raw_data = raw_data[raw_data['AMT_INCOME_TOTAL'] < 100000000]
 
-		good_cols = ['CODE_GENDER', 'AMT_INCOME_TOTAL', 'AMT_CREDIT', 'AMT_ANNUITY', 'AMT_GOODS_PRICE', 
+		good_cols = ['CODE_GENDER', 'AMT_INCOME_TOTAL', 'AMT_CREDIT', 'AMT_ANNUITY', 'AMT_GOODS_PRICE',
 		             'NAME_EDUCATION_TYPE', 'NAME_FAMILY_STATUS', 'DAYS_BIRTH', 'DAYS_EMPLOYED', 'OCCUPATION_TYPE']
 		infos = raw_data.loc[:,good_cols]
 
@@ -32,14 +32,14 @@ def main():
 		infos['YEARS EMPLOYED'] = round((infos['DAYS_EMPLOYED']/-365), 2)
 		infos.drop(['DAYS_BIRTH', 'DAYS_EMPLOYED'], axis=1, inplace=True)
 
-		infos = infos[[ 'AGE', 'CODE_GENDER','NAME_FAMILY_STATUS', 
+		infos = infos[[ 'AGE', 'CODE_GENDER','NAME_FAMILY_STATUS',
 		               'NAME_EDUCATION_TYPE', 'OCCUPATION_TYPE','YEARS EMPLOYED',
-		               'AMT_INCOME_TOTAL', 'AMT_CREDIT', 'AMT_ANNUITY', 'AMT_GOODS_PRICE', 
+		               'AMT_INCOME_TOTAL', 'AMT_CREDIT', 'AMT_ANNUITY', 'AMT_GOODS_PRICE',
 		             ]]
 
-		infos.columns = [ 'AGE', 'GENDER','FAMILY STATUS', 
+		infos.columns = [ 'AGE', 'GENDER','FAMILY STATUS',
 		               'EDUCATION TYPE', 'OCCUPATION TYPE','YEARS EMPLOYED',
-		               'YEARLY INCOME', 'AMOUNT CREDIT', 'AMOUNT ANNUITY', 'GOODS PRICE', 
+		               'YEARLY INCOME', 'AMOUNT CREDIT', 'AMOUNT ANNUITY', 'GOODS PRICE',
 		             ]
 		return infos
 
@@ -48,12 +48,12 @@ def main():
 		app_train_clean = pd.read_csv('./data_model/app_train_clean1.csv', nrows=n_rows, index_col=0)
 		return app_train_clean.drop('TARGET', axis=1)
 
-	
+
 	data_load_state = st.text('Loading data...')
 	infos = transform_raw_data('./data_model/application_train1.csv')
 	data_processed = load_app_train_clean()
 	moyennes = pd.read_csv('./data_model/moyennes.csv', index_col=0)
-	with open('./data_model/light_gbm.pickle', 'rb') as file : 
+	with open('./data_model/light_gbm.pickle', 'rb') as file :
 		LGB = pickle.load(file)
 	df_vois = pd.get_dummies(infos.iloc[:,:6])
 	df_vois = df_vois.dropna()
@@ -134,10 +134,10 @@ def main():
     # INTERPRETATION
 
 	feature_desc = { 'EXT_SOURCE_2' : 'Score normalisé attribué par un organisme indépendant',
-	                'EXT_SOURCE_3' :  'Score normalisé attribué par un organisme indépendant', 
-	                'AMT_ANNUITY' : 'Montant des annuités', 
+	                'EXT_SOURCE_3' :  'Score normalisé attribué par un organisme indépendant',
+	                'AMT_ANNUITY' : 'Montant des annuités',
 	                'AMT_GOODS_PRICE' : 'Montant du bien immobilier',
-	                'CREDIT_INCOME_PERCENT' : 'Crédit demandé par rapport aux revenus', 
+	                'CREDIT_INCOME_PERCENT' : 'Crédit demandé par rapport aux revenus',
 	                'DAYS_EMPLOYED_PERCENT' : 'Années travaillées en pourcentage' }
 
 	st.header('Interprétation du résultat')
@@ -152,8 +152,8 @@ def main():
 	fig2 = go.Figure(data=[go.Bar(
 	    x=dfcomp[feature],
 	    y=['Moyenne des clients en règle ',
-		  'Moyenne des clients en défaut ', 
-		  'Moyenne des clients similaires ', 
+		  'Moyenne des clients en défaut ',
+		  'Moyenne des clients similaires ',
 		  'Client Sélectionné '],
 	    marker_color=['green','red', 'orange', 'blue'],
 	    orientation ='h'
@@ -163,8 +163,5 @@ def main():
 	st.plotly_chart(fig2)
 
 if __name__== '__main__':
+	#
     main()
-
-
-
-
